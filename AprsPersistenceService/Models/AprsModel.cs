@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,5 +34,24 @@ namespace AprsPersistenceService.Models
                 return Long + ", " + Lat;
             }
         }
+
+        public Dictionary<string, string> lines = new Dictionary<string, string>();
+
+        /*  JSON.NET chokes when trying to serialize this
+        private ConcurrentDictionary<string, string> lines = new ConcurrentDictionary<string, string>();
+
+        public void AddLine(string key, string value)
+        {
+            lines.TryAdd(key, value);
+        }
+
+        public Dictionary<string, string> Lines
+        {
+            get
+            {
+                return this.Lines;
+            }
+        }
+        */
     }
 }

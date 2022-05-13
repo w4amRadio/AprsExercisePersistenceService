@@ -1,0 +1,23 @@
+﻿Digipeater WIDE2 (probably KA4EMA-3) audio level = 2(1/1)   [NONE]   __||||||_
+[0.4] KD4YDD-1>APU25N,N4NE-2,KA4EMA-3,WIDE2*:=3403.77N/08355.46WIKD4YDD-1 Dacula, Ga iGate/Digi<0x0d>
+Position, TcpIp on air network stn, UIview 32 bit apps
+N 34 03.7700, W 083 55.4600
+KD4YDD-1 Dacula, Ga iGate/Digi
+
+Digipeater WIDE2 (probably KA4EMA-3) audio level = 2(1/1)   [NONE]   __|||||||
+[0.5] W1ARN-1>APMI06,KM4BJZ-2,KA4EMA-3,WIDE2*:@120006z3628.04N/08628.57W-WX3in1Plus2.0 !TNWX U=14.5V,T=25.3C/77.5F
+Position with time, House, SQ3PLX http://microsat.com.pl/
+N 36 28.0400, W 086 28.5700
+WX3in1Plus2.0 !TNWX U=14.5V,T=25.3C/77.5F
+
+Digipeater WIDE2 (probably KA4EMA-3) audio level = 2(1/1)   [NONE]   __|||||||
+[0.5] KF4TJY-8>S4PQ8V,N3DAB-1,KA4EMA-3,WIDE2*:`p<fl"mj/'"73}|"T%O("|!w#p!|3
+MIC-E, JEEP, Byonics TinyTrack3, In Service
+N 34 01.8602, W 084 32.7487, 0 MPH, course 281, alt 988 ft
+Seq=142, A1=410, A2=638
+
+Digipeater WIDE2 (probably KA4EMA-3) audio level = 2(1/1)   [NONE]   __|||||||
+[0.5] AB4GS-1>APDW16,N4NE-2,KA4EMA-3,WIDE2*:!3427.34NS08351.70W#PHG5260Murrayville GA
+Position, OVERLAY DIGI (green star) w/overlay S, DireWolf, WB2OSZ, 25 W height=40 6dBi omni
+N 34 27.3400, W 083 51.7000
+Murrayville GA

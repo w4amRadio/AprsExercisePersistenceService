@@ -3,6 +3,7 @@ using AprsPersistenceService.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,13 @@ namespace APRS.Tests
                             "Position, TcpIp on air network stn, UIview 32 bit apps" + Environment.NewLine +
                             "N 34 03.7700, W 083 55.4600" + Environment.NewLine +
                             "KD4YDD-1 Dacula, Ga iGate/Digi";
+
+        string testCorpus = string.Empty;
+
+        public AprsMessageTests()
+        {
+            testCorpus = File.ReadAllText("TestMessages.txt");
+        }
 
         [TestMethod]
         public void TestMessageParsing()

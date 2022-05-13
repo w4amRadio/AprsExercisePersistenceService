@@ -10,6 +10,7 @@ namespace AprsPersistenceService.Models
     {
         public string PacketCaptureFilePath { get; set; }
         public bool DebugMode { get; set; }
+        public int TimeToYieldFinalMessageSeconds { get; set; }
         public List<string> BypassLines { get; set; }
     }
 }

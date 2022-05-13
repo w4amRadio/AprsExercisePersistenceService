@@ -1,5 +1,6 @@
 ﻿using AprsPersistenceService.Interfaces;
 using AprsPersistenceService.Models;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,8 +18,16 @@ namespace AprsPersistenceService
         protected bool _includeDebug;
         protected List<string> _bypassLines = new List<string>();
         protected IAprsPacketParser _aprsPacketParser;
+        private readonly ILogger _logger;
 
-        public DirewolfLogReader(DirewolfLogParserConfigs direwolfLogParserConfigs, IAprsPacketParser aprsPacketParser)
+        const char packetDemarcationCharacter = (char)10;   //0x0A LF
+        private readonly string packetDemarcationString = Encoding.UTF8.GetString(new byte[] { 0x0A });
+        private int sleepInterval = 5000;
+
+        public DirewolfLogReader(
+            DirewolfLogParserConfigs direwolfLogParserConfigs,
+            IAprsPacketParser aprsPacketParser,
+            ILogger logger)
         {
 
             if(direwolfLogParserConfigs == null)
@@ -30,6 +39,11 @@ namespace AprsPersistenceService
             {
                 throw new ArgumentNullException("AprsPacketParser implementation passed to DirewolfLogReader must not be null!  Was IoC wireup successful?");
             }
+
+            if(logger == null)
+            {
+                throw new ArgumentNullException("Implementation of ILogger has not been passed to DirewolfLogReader!  Was IoC wireup successful?");
+            }
             
             this._path = direwolfLogParserConfigs.PacketCaptureFilePath;
             this._includeDebug = direwolfLogParserConfigs.DebugMode;
@@ -40,9 +54,13 @@ namespace AprsPersistenceService
             }
 
             this._aprsPacketParser = aprsPacketParser;
+            this._logger = logger;
 
-            //Timer logTimer = new Timer();
-
+            if(direwolfLogParserConfigs.TimeToYieldFinalMessageSeconds > 0)
+            {
+                sleepInterval = direwolfLogParserConfigs.TimeToYieldFinalMessageSeconds * 1000;
+            }
+            
             /*
             Task<IEnumerable<string>> pack = Task.Run<IEnumerable<string>>(() => ReadLogBlob(path));
             //var pack = ReadLogBlob(path);
@@ -78,56 +96,33 @@ namespace AprsPersistenceService
         public IEnumerable<AprsModel> ParseContinuously()
         {
             int blockLine = 0;
-            List<string> textblocks = new List<string>();
+            List<string> _textblocks = new List<string>();
 
             foreach (string result in ReadLogBlob(_path))
             {
-                //TODO: need to include timer to add /n when nothing comes back so the last packet is processed or change how this is processed
-
                 //necessary to have enumeration only once?
                 string aprsString = result;
 
-                if(_bypassLines.Any(x => aprsString.Contains(x)))
+                if (IsBypassLine(aprsString))
                 {
-                    if (_includeDebug)
-                    {
-                        Console.WriteLine($"Bypassing line '{aprsString}'...");
-                    }
-
                     continue;
                 }
 
-                /*
-                if (aprsString.Contains("Dire Wolf version") ||
-                    aprsString.Contains("Includes optional support for:") ||
-                    aprsString.Contains("Reading config file ") ||
-                    aprsString.Contains("Audio device for both receive and transmit:") ||
-                    aprsString.Contains("Channel 0: 1200 baud, AFSK 1200 & 2200 Hz") ||
-                    aprsString.Contains("Note: PTT not configured for channel 0. (Ignore this if using VOX.)") ||
-                    aprsString.Contains("Ready to accept AGW client application") ||
-                    aprsString.Contains("Ready to accept KISS client application") ||
-                    aprsString.Contains("Virtual KISS TNC is available on") ||
-                    aprsString.Contains("Created symlink"))
-                {
-                    Console.WriteLine("Bypassing line...");
-                    continue;
-                }
-                */
-
-                //this demarcates new packets
-                if (aprsString.Equals((char)10) || aprsString.Length == 0)       //0x0A LF
+                if (IsNewPacket(aprsString))
                 {
                     //finish parsing the last text block
-                    if (blockLine > 0 && textblocks.Count > 0)
+                    if (blockLine > 0 && _textblocks.Count > 0)
                     {
-                        var aprs = _aprsPacketParser.ParseAprsPacket(textblocks.ToArray());
+                        var aprs = _aprsPacketParser.ParseAprsPacket(_textblocks.ToArray());
 
                         if (_includeDebug)
                         {
-                            Console.WriteLine(Environment.NewLine);
-                            Console.WriteLine("JSON Structure of APRS...");
-                            Console.WriteLine(JsonConvert.SerializeObject(aprs));
+                            _logger.LogDebug(Environment.NewLine);
+                            _logger.LogDebug("JSON Structure of APRS...");
+                            _logger.LogDebug(JsonConvert.SerializeObject(aprs));
                         }
+
+                        _textblocks.Clear();
 
                         yield return aprs;
                     }
@@ -140,19 +135,43 @@ namespace AprsPersistenceService
 
                 if (_includeDebug)
                 {
-                    Console.WriteLine($"Blockline: {blockLine}");
-                    Console.WriteLine($"Length of aprsString: {aprsString.Length}");
+                    _logger.LogDebug($"Blockline: {blockLine}");
+                    _logger.LogDebug($"Length of aprsString: {aprsString.Length}");
+                    _logger.LogDebug($"APRS String: {aprsString}");
                 }
-
-                Console.WriteLine(aprsString);
 
                 if (_includeDebug)
                 {
-                    Encoding.UTF8.GetBytes(aprsString).ToList().ForEach(x => Console.Write(x + " "));
+                    StringBuilder sb = new StringBuilder();
+                    Encoding.UTF8.GetBytes(aprsString).ToList().ForEach(x => sb.Append(x + " "));
+                    _logger.LogDebug(sb.ToString());
                 }
 
-                textblocks.Add(aprsString);
+                _textblocks.Add(aprsString);
             }
+        }
+
+        private bool IsBypassLine(string line)
+        {
+            bool retval = false;
+
+            if (_bypassLines.Any(x => line.Contains(x)))
+            {
+                if (_includeDebug)
+                {
+                    _logger.LogDebug($"Bypassing line '{line}'...");
+                }
+
+                retval = true;
+            }
+
+            return retval;
+        }
+
+        private bool IsNewPacket(string line)
+        {
+            //demarcates new packets
+            return (line.Equals(packetDemarcationCharacter) || line.Equals(packetDemarcationString) || line.Length == 0) ? true : false;
         }
 
         public IEnumerable<string> ReadLogBlob(string path)
@@ -165,13 +184,17 @@ namespace AprsPersistenceService
                 {
                     while (streamReader.EndOfStream)
                     {
-                        Thread.Sleep(1000);
+                        Thread.Sleep(sleepInterval);
+                        yield return packetDemarcationString;
                     }
 
                     read = streamReader.ReadLine();
-                    //Console.WriteLine(read);
 
-                    Console.WriteLine("Yielding Results...");
+                    if (_includeDebug)
+                    {
+                        _logger.LogDebug("Yielding Results...");
+                    }
+                    
                     yield return read;
                 }
             }
