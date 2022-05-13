@@ -3,6 +3,9 @@
 Deploy to R-PI with
 dotnet publish AprsPersistenceService.csproj -r linux-arm -c debug --self-contained true
 
+Start direwolf from command line (don't use -p option here because pseudo-terminal will log noise when no one is watching):
+direwolf -t 0 -c /home/pi/direwolf.conf | tee -a ~/aprs_capture/raw_aprs_capture.log
+
 
 sftp pi@192.128.1.7
 put aprs_persist.tar
