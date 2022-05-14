@@ -9,9 +9,14 @@ CREATE TABLE IF NOT EXISTS public."EnterpriseSouth2022Aprs"
     "AprsHeader" text COLLATE pg_catalog."default",
     "Location" geography,
     "Text" text COLLATE pg_catalog."default",
+	"Radio" text COLLATE pg_catalog."default",
     "WeatherInformation" text COLLATE pg_catalog."default",
     "Altitude" text COLLATE pg_catalog."default",
+	"Course" text COLLATE pg_catalog."default",
     "DateTime" timestamp with time zone,
+	"Voltage" text COLLATE pg_catalog."default",
+	"From" text COLLATE pg_catalog."default",
+	"To" text COLLATE pg_catalog."default"
     CONSTRAINT "EnterpriseSouth2022Aprs_pkey" PRIMARY KEY ("Id")
 )
 
