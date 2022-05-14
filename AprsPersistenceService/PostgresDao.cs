@@ -76,13 +76,20 @@ namespace AprsPersistenceService
                     Console.WriteLine("Beginning insert statement...");
                 }
 
+                string locationString = string.Empty;
+
+                if (!string.IsNullOrEmpty(aprs.Long) && !string.IsNullOrEmpty(aprs.Lat))
+                {
+                    locationString = $"Point({LatLongParser.ConvertLongitude(aprs.Long)} {LatLongParser.ConvertLatitude(aprs.Lat)})";
+                }
+
                 await using (NpgsqlCommand command = new NpgsqlCommand("CALL sp_persist_aprs(@TncHeader, @AprsHeader, @Location, @Text, @WeatherInformation, @Altitude);", connection)
                 {
                     Parameters =
                     {
                         new NpgsqlParameter("TncHeader", aprs.TncHeader),
                         new NpgsqlParameter("AprsHeader", aprs.AprsHeader),
-                        new NpgsqlParameter("Location", $"Point({LatLongParser.ConvertLongitude(aprs.Long)} {LatLongParser.ConvertLatitude(aprs.Lat)})"),
+                        new NpgsqlParameter("Location", locationString),
                         //new NpgsqlParameter("From", aprs.From ),
                         //new NpgsqlParameter("To", aprs.To ),
                         new NpgsqlParameter("Text", aprs.Text),

@@ -11,6 +11,12 @@ sftp pi@192.128.1.7
 put aprs_persist.tar
 get aprs_capture/raw_packet_capture.log
 
+Can possibly make service discovery script since in the field ip's will be new.
+nmap -sn 192.168.1.0/24
+nmap -sP 192.168.1.0/24
+nmap -O 192.168.1.19
+nmap -sV 192.168.1.51
+
 rm -r aprs_persist 
 tar -xvf aprs_persist.tar
 
