@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AprsPersistenceService.Models;
 using AprsPersistenceService.Utils;
+using Microsoft.Extensions.Logging;
 using Npgsql;
 using NpgsqlTypes;
 
@@ -14,11 +15,20 @@ namespace AprsPersistenceService
     {
         private string _connectionString = string.Empty;
         protected bool _includeDebug = false;
+        protected ILogger _logger;
 
-        public PostgresDao(PostgresConfigs postgresConfigs)
+        public PostgresDao(
+            PostgresConfigs postgresConfigs,
+            ILogger logger)
         {
+            if(logger == null)
+            {
+                throw new ArgumentNullException("ILogger passed into PostgresDao cannot be null!  Has it been instantiated?");
+            }
+
             this._includeDebug = postgresConfigs.DebugMode;
             this._connectionString = CreateConnectionString(postgresConfigs);
+            this._logger = logger;
         }
 
         private string CreateConnectionString(PostgresConfigs postgresConfigs)
@@ -32,15 +42,15 @@ namespace AprsPersistenceService
             {
                 if (_includeDebug)
                 {
-                    Console.WriteLine("Opening Connection...");
+                    _logger.LogDebug("Opening Connection...");
                 }
 
                 await connection.OpenAsync();
 
                 if (_includeDebug)
                 {
-                    Console.WriteLine("Connection opened.");
-                    Console.WriteLine("Beginning insert statement...");
+                    _logger.LogDebug("Connection opened.");
+                    _logger.LogDebug("Beginning insert statement...");
                 }
 
                 await using (NpgsqlCommand command = new NpgsqlCommand("INSERT INTO public.\"EnterpriseSouth2022Aprs\" (\"Timestamp\", \"TncHeader\") VALUES (@Timestamp, @TncHeader)", connection)
@@ -56,7 +66,7 @@ namespace AprsPersistenceService
                 }
 
                 if (_includeDebug)
-                    Console.WriteLine("Insert statement executed.");
+                    _logger.LogDebug("Insert statement executed.");
             }
         }
 
@@ -71,15 +81,15 @@ namespace AprsPersistenceService
             {
                 if (_includeDebug)
                 {
-                    Console.WriteLine("Opening Connection...");
+                    _logger.LogDebug("Opening Connection...");
                 }
 
                 await connection.OpenAsync();
 
                 if (_includeDebug)
                 {
-                    Console.WriteLine("Connection opened.");
-                    Console.WriteLine("Beginning insert statement...");
+                    _logger.LogDebug("Connection opened.");
+                    _logger.LogDebug("Beginning insert statement...");
                 }
 
                 string locationString = string.Empty;
@@ -113,7 +123,7 @@ namespace AprsPersistenceService
                 }
 
                 if (_includeDebug)
-                    Console.WriteLine("Insert statement executed.");
+                    _logger.LogDebug("Insert statement executed.");
             }
         }
 

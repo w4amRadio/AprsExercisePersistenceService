@@ -1,5 +1,6 @@
 ﻿using AprsPersistenceService.Interfaces;
 using AprsPersistenceService.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +13,17 @@ namespace AprsPersistenceService
     public class AprsPacketParser : IAprsPacketParser
     {
         public bool DebugMode { get; set; }
+        private ILogger _logger; 
 
-        public AprsPacketParser(PacketParserConfigs packetParserConfigs)
+        public AprsPacketParser(ILogger logger, PacketParserConfigs packetParserConfigs)
         {
+            if(logger == null)
+            {
+                throw new ArgumentNullException("ILogger passed into AprsPacketParser cannot be null!  Has it been instantiated?");
+            }
+
             DebugMode = packetParserConfigs == null ? false : packetParserConfigs.DebugMode;
-        }
-
-        public AprsPacketParser(bool debugMode)
-        {
-            DebugMode = debugMode;
+            this._logger = logger;
         }
 
         public AprsModel ParseAprsPacket(string[] textBlock)
@@ -29,7 +32,7 @@ namespace AprsPersistenceService
 
             if (DebugMode)
             {
-                Console.WriteLine("Parsing APRS packet...");
+                _logger.LogDebug("Parsing APRS packet...");
             }
 
             //tnc header
@@ -42,8 +45,8 @@ namespace AprsPersistenceService
 
                 if (DebugMode)
                 {
-                    Console.WriteLine($"TNC Header: {retval.TncHeader}");
-                    Console.WriteLine($"Is From Digipeater: {retval.FromDigipeater}");
+                    _logger.LogDebug($"TNC Header: {retval.TncHeader}");
+                    _logger.LogDebug($"Is From Digipeater: {retval.FromDigipeater}");
                 }
             }
 
@@ -54,7 +57,7 @@ namespace AprsPersistenceService
 
                 if (DebugMode)
                 {
-                    Console.WriteLine($"APRS Header: {retval.AprsHeader}");
+                    _logger.LogDebug($"APRS Header: {retval.AprsHeader}");
                 }
                 
             }
@@ -67,7 +70,7 @@ namespace AprsPersistenceService
 
                 if (DebugMode)
                 {
-                    Console.WriteLine($"Text Line: {retval.Text}");
+                    _logger.LogDebug($"Text Line: {retval.Text}");
                 }
             }
 
@@ -85,9 +88,9 @@ namespace AprsPersistenceService
 
                 if (DebugMode)
                 {
-                    Console.WriteLine($"Repeating Location: {retval.RepeatingLocation}");
-                    Console.WriteLine($"Lattitude: {retval.Lat}");
-                    Console.WriteLine($"Longitude: {retval.Long}");
+                    _logger.LogDebug($"Repeating Location: {retval.RepeatingLocation}");
+                    _logger.LogDebug($"Lattitude: {retval.Lat}");
+                    _logger.LogDebug($"Longitude: {retval.Long}");
                 }
             }
 
@@ -98,7 +101,7 @@ namespace AprsPersistenceService
 
                 if(DebugMode)
                 {
-                    Console.WriteLine($"Extra1: {retval.Extra1}");
+                    _logger.LogDebug($"Extra1: {retval.Extra1}");
                 }
             }
 

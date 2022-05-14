@@ -43,7 +43,7 @@ namespace AprsPersistenceService
 
                 //TODO: Use serilog for logging and log based on ms standard
 
-                PostgresDao postgres = new PostgresDao(postgresConfigs: postgresConfigs);
+                PostgresDao postgres = new PostgresDao(postgresConfigs: postgresConfigs, logger: logger);
 
                 IAprsPacketParser aprsPacketParser = new AprsPacketParser(packetParserConfigs);
                 DirewolfLogReader direwolfLogReader = new DirewolfLogReader(direwolfLogParserConfigs, aprsPacketParser, logger);
