@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AprsPersistenceService.Models;
 using AprsPersistenceService.Utils;
 using Npgsql;
+using NpgsqlTypes;
 
 namespace AprsPersistenceService
 {
@@ -96,15 +97,15 @@ namespace AprsPersistenceService
                         new NpgsqlParameter("AprsHeader", aprs.AprsHeader),
                         new NpgsqlParameter("Location", locationString),
                         new NpgsqlParameter("Text", aprs.Text),
-                        new NpgsqlParameter("WeatherInformation", aprs.Extra1 ?? ""),
-                        new NpgsqlParameter("Altitude", aprs.Altitude),
-                        new NpgsqlParameter("Radio", aprs.Radio),
-                        new NpgsqlParameter("Course", aprs.Course),
-                        new NpgsqlParameter("Voltage", aprs.GateVoltage),
+                        new NpgsqlParameter("WeatherInformation", aprs.Extra1 ?? string.Empty),
+                        new NpgsqlParameter("Altitude", aprs.Altitude ?? string.Empty),
+                        new NpgsqlParameter("Radio", aprs.Radio ?? string.Empty),
+                        new NpgsqlParameter("Course", aprs.Course ?? string.Empty),
+                        new NpgsqlParameter("Voltage", aprs.GateVoltage ?? string.Empty),
                         //new NpgsqlParameter("Lat", aprs.Lat),
                         //new NpgsqlParameter("Long", aprs.Long)
-                        new NpgsqlParameter("From", aprs.From ),
-                        new NpgsqlParameter("To", aprs.To )
+                        new NpgsqlParameter("From", aprs.From ?? string.Empty),
+                        new NpgsqlParameter("To", aprs.To ?? string.Empty)
                     }
                 })
                 {
