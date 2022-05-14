@@ -61,6 +61,11 @@ namespace AprsPersistenceService
 
         public async Task PersistAprs(AprsModel aprs)
         {
+            if(aprs == null)
+            {
+                throw new Exception("APRS model cannot be null in PersistAprs!");
+            }
+
             await using (NpgsqlConnection connection = new NpgsqlConnection(_connectionString))
             {
                 if (_includeDebug)
@@ -83,20 +88,23 @@ namespace AprsPersistenceService
                     locationString = $"Point({LatLongParser.ConvertLongitude(aprs.Long)} {LatLongParser.ConvertLatitude(aprs.Lat)})";
                 }
 
-                await using (NpgsqlCommand command = new NpgsqlCommand("CALL sp_persist_aprs(@TncHeader, @AprsHeader, @Location, @Text, @WeatherInformation, @Altitude);", connection)
+                await using (NpgsqlCommand command = new NpgsqlCommand("CALL sp_persist_aprs(@TncHeader, @AprsHeader, @Location, @Text, @WeatherInformation, @Altitude, @Radio, @Course, @Voltage, @From, @To);", connection)
                 {
                     Parameters =
                     {
                         new NpgsqlParameter("TncHeader", aprs.TncHeader),
                         new NpgsqlParameter("AprsHeader", aprs.AprsHeader),
                         new NpgsqlParameter("Location", locationString),
-                        //new NpgsqlParameter("From", aprs.From ),
-                        //new NpgsqlParameter("To", aprs.To ),
                         new NpgsqlParameter("Text", aprs.Text),
                         new NpgsqlParameter("WeatherInformation", aprs.Extra1 ?? ""),
-                        new NpgsqlParameter("Altitude", "400 ft")
+                        new NpgsqlParameter("Altitude", aprs.Altitude),
+                        new NpgsqlParameter("Radio", aprs.Radio),
+                        new NpgsqlParameter("Course", aprs.Course),
+                        new NpgsqlParameter("Voltage", aprs.GateVoltage),
                         //new NpgsqlParameter("Lat", aprs.Lat),
                         //new NpgsqlParameter("Long", aprs.Long)
+                        new NpgsqlParameter("From", aprs.From ),
+                        new NpgsqlParameter("To", aprs.To )
                     }
                 })
                 {
