@@ -9,6 +9,6 @@ namespace AprsPersistenceService.Interfaces
 {
     public interface IAprsPacketParser
     {
-        AprsModel ParseAprsPacket(string[] textBlock);
+        AprsModel ParseAprsPacket(List<string> textBlock);
     }
 }

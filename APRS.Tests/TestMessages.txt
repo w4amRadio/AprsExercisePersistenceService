@@ -21,3 +21,25 @@ Digipeater WIDE2 (probably KA4EMA-3) audio level = 2(1/1)   [NONE]   __|||||||
 Position, OVERLAY DIGI (green star) w/overlay S, DireWolf, WB2OSZ, 25 W height=40 6dBi omni
 N 34 27.3400, W 083 51.7000
 Murrayville GA
+
+Digipeater WIDE2 (probably KA4EMA-3) audio level = 57(30/14)   [NONE]   __|||||||
+[0.5] AB4BJ-10>APMI01,N4LMC-3,KA4EMA-3,WIDE2*:@110450z3449.43N/08459.08W_275/000g001t075r000p013P000h91b10093WX3in1+ Davis Vantage Vue
+Weather Report, WEATHER Station (blue), SQ3PLX http://microsat.com.pl/
+N 34 49.4300, W 084 59.0800
+wind 0.0 mph, direction 275, gust 1, temperature 75, rain 0.00 in last hour, rain 0.13 in last 24 hours, rain 0.00 since midnight, humidity 91, barometer 29.81, "WX3in1+ Davis Vantage Vue"
+
+Digipeater WIDE2 (probably KA4EMA-3) audio level = 58(29/14)   [NONE]   __|||||||
+[0.5] AK4ZX-15>APMI06,N4LMC-3,KA4EMA-3,WIDE2*:@110206z3431.18NI08420.60W#NGGMRS Flagship APRS Gateway & I-Gate
+Position with time, OVERLAY DIGI (green star) w/overlay I, SQ3PLX http://microsat.com.pl/
+N 34 31.1800, W 084 20.6000
+NGGMRS Flagship APRS Gateway & I-Gate
+
+Digipeater WIDE1 (probably KA4EMA-3) audio level = 2(1/1)   [NONE]   __|||||||
+[0.5] KM4KMO-5>APDR16,KA4EMA-3,WIDE1*::KN4TEM   :Trash on side of road{6
+APRS Message 6 for "KN4TEM", Yacht  <= the original primar, APRSdroid Android App http://aprsdroid.org/
+Trash on side of road{6
+
+N5EIA-7 audio level = 60(27/13)   [NONE]   ___|||||_
+[0.5] N5EIA-7>APDR16,::         :Vvvv{1
+APRS Message 1 for "", Small Aircraft (original prim, APRSdroid Android App http://aprsdroid.org/
+Vvvv{1

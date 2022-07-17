@@ -1,5 +1,6 @@
 ﻿using AprsPersistenceService;
 using AprsPersistenceService.Models;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -29,8 +30,8 @@ namespace APRS.Tests
         [TestMethod]
         public void TestMessageParsing()
         {
-            AprsPacketParser aprsPacketParser = new AprsPacketParser(new PacketParserConfigs() { DebugMode = true });
-            var result = aprsPacketParser.ParseAprsPacket(testString.Split(Environment.NewLine));
+            AprsPacketParser aprsPacketParser = new AprsPacketParser(NullLogger.Instance, new PacketParserConfigs() { DebugMode = true });
+            var result = aprsPacketParser.ParseAprsPacket(testString.Split(Environment.NewLine).ToList<string>());
 
             Assert.IsNotNull(result);
             //Assert.AreEqual();

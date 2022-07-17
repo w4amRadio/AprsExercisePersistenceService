@@ -44,7 +44,7 @@ namespace APRS.Tests
                 PacketCaptureFilePath = "TestMessages.txt"
             };
 
-            IAprsPacketParser packetParser = new AprsPacketParser(true);
+            IAprsPacketParser packetParser = new AprsPacketParser(NullLogger.Instance, null);
 
             direwolfLogReader = new DirewolfLogReader(
                 direwolfLogParserConfigs: configs,

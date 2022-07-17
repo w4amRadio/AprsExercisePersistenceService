@@ -113,7 +113,7 @@ namespace AprsPersistenceService
                     //finish parsing the last text block
                     if (blockLine > 0 && _textblocks.Count > 0)
                     {
-                        var aprs = _aprsPacketParser.ParseAprsPacket(_textblocks.ToArray());
+                        var aprs = _aprsPacketParser.ParseAprsPacket(_textblocks);
 
                         if (_includeDebug)
                         {

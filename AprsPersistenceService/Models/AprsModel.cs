@@ -18,6 +18,7 @@ namespace AprsPersistenceService.Models
         public bool FromDigipeater { get; set; }
         public string From { get; set; }
         public string To { get; set; }
+        public string TextMessage { get; set; }
         public string Lat { get; set; }
         public string Long { get; set; }
         public string Course { get; set; }

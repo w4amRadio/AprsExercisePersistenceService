@@ -31,7 +31,9 @@ namespace AprsPersistenceService
                 .WriteTo.Console()
                 .CreateLogger();
 
-            Microsoft.Extensions.Logging.ILogger logger = new SerilogLoggerFactory(serilogLogger).CreateLogger<Program>(); 
+            var serilogFactory = new SerilogLoggerFactory(serilogLogger);
+
+            Microsoft.Extensions.Logging.ILogger logger = serilogFactory.CreateLogger<Program>();
 
             try
             {
@@ -45,7 +47,7 @@ namespace AprsPersistenceService
 
                 PostgresDao postgres = new PostgresDao(postgresConfigs: postgresConfigs, logger: logger);
 
-                IAprsPacketParser aprsPacketParser = new AprsPacketParser(packetParserConfigs);
+                IAprsPacketParser aprsPacketParser = new AprsPacketParser(serilogFactory.CreateLogger<AprsPacketParser>(), packetParserConfigs);
                 DirewolfLogReader direwolfLogReader = new DirewolfLogReader(direwolfLogParserConfigs, aprsPacketParser, logger);
                 foreach (AprsModel model in direwolfLogReader.ParseContinuously())
                 {
